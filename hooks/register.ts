@@ -71,6 +71,23 @@ async function manda($: any, testo: string, secondi = 15) {
   } catch {}
 }
 
+let ultimoControllo = 0
+
+async function interventi($: any): Promise<string> {
+  // al massimo un controllo ogni due secondi, per non rallentare il lavoro
+  const ora = Date.now()
+  if (haAmico === false || ora - ultimoControllo < 2000) return ''
+  ultimoControllo = ora
+  try {
+    const r: any = await $.tool.call({ tool: AMICO, descrizione: 'interventi:' })
+    const testo = String(r?.text ?? r?.result ?? '').trim()
+    if (!testo || testo === 'ok' || testo.startsWith('Errore') || testo.startsWith('Il motore')) return ''
+    return testo.replace(/\s+/g, ' ').slice(0, 400)
+  } catch {
+    return ''
+  }
+}
+
 export const register: Register = (on) => {
   // Inizio del turno principale: sto leggendo il messaggio
   on('turn.start', ($, e, next) => {
@@ -85,12 +102,18 @@ export const register: Register = (on) => {
   })
 
   // Ogni strumento: il titolo di cosa faccio
-  on('tool.call', ($, e, next) => {
+  on('tool.call', async ($, e, next) => {
     const t = String((e as any).tool)
-    if (!t.startsWith(PREFISSO_AMICO) && (next as any).origin !== 'omino-titoli') {
-      void manda($, titoloDi(e), 25)
-    }
-    return next(e)
+    const mio = t.startsWith(PREFISSO_AMICO) || (next as any).origin === 'omino-titoli'
+    if (!mio) void manda($, titoloDi(e), 25)
+    const esito: any = await next(e)
+    if (mio || esito?.deny !== undefined) return esito
+    // Francesco ha parlato a voce mentre lavoravo? L'orecchio del computer lo ha messo da parte:
+    // lo consegno al modello come contesto del risultato, senza toccare il risultato stesso.
+    const detto = await interventi($)
+    if (!detto) return esito
+    const nota = `[Francesco ti ha parlato a voce mentre lavoravi: "${detto}"] Rispondigli subito a voce con lo strumento parla (o commenta se breve), solo a questo, poi continua il lavoro tenendo conto di quello che ha detto.`
+    return { ...esito, context: [...(esito?.context ?? []), nota] }
   }).catch(($, e, next) => next(e))
 
   // Fine del turno: risposta pronta

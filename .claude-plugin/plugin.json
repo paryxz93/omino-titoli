@@ -1,7 +1,7 @@
 {
   "name": "omino-titoli",
-  "version": "0.1.0",
-  "description": "Manda all'omino sul desktop di Francesco il titolo di cosa sta facendo Claude in chat (strumenti, ragionamento, fine turno), senza appesantire le risposte.",
+  "version": "0.2.0",
+  "description": "Manda all'omino sul desktop di Francesco il titolo di cosa sta facendo Claude e gli consegna le frasi che Francesco dice a voce mentre Claude lavora.",
   "author": {
     "name": "Francesco Parisi"
   }

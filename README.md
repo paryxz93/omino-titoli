@@ -10,6 +10,10 @@ Mod per Claude Code: mentre Claude lavora in chat, manda al "Mini Francesco" sul
 
 Rispondi `y` per aggiungere il marketplace, poi scegli l'ambito (utente, così vale in ogni sessione).
 
+## Orecchio sempre acceso
+
+Dopo ogni strumento il mod chiede al server `amico` se Francesco ha detto qualcosa a voce nel frattempo (`lavora` con `interventi:`). Se sì, la frase arriva al modello come contesto del risultato, con l'indicazione di rispondere a voce solo a quello e poi continuare.
+
 ## Come funziona
 
 1. `turn.start`: "Leggo il tuo messaggio".
