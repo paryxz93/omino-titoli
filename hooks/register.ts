@@ -94,7 +94,10 @@ async function interventi($: any): Promise<string> {
 export const register: Register = (on) => {
   // Inizio del turno principale: sto leggendo il messaggio
   on('turn.start', ($, e, next) => {
-    if (e.agentId === undefined) void manda($, 'Leggo il tuo messaggio', 20)
+    if (e.agentId === undefined) {
+      void manda($, 'Leggo il tuo messaggio', 20)
+      ultimoPrompt = String(e.text ?? '').trim()
+    }
     return next(e)
   })
 
@@ -120,8 +123,24 @@ export const register: Register = (on) => {
   }).catch(($, e, next) => next(e))
 
   // Fine del turno: risposta pronta
-  on('turn.complete', ($, e, next) => {
+  on('turn.complete', async ($, e, next) => {
     if (e.agentId === undefined) void manda($, e.reason === 'answer' ? 'Risposta pronta' : 'Mi sono fermato', 6)
-    return next(e)
+    const esito: any = await next(e)
+    // Memoria: ogni scambio (domanda e risposta) finisce nel diario locale sul computer di Francesco,
+    // cosi' nessuna conversazione va persa e si puo' ricercare in seguito.
+    if (e.agentId === undefined && e.reason === 'answer') {
+      const risposta = String(esito?.text ?? '').trim()
+      if (risposta || ultimoPrompt) {
+        const corpo = `DOMANDA: ${taglia(ultimoPrompt, 1500)}\nRISPOSTA: ${taglia(risposta, 4000)}`
+        void $.tool.call({ tool: AMICO, descrizione: `ricorda:scambio|${corpo}` }).catch(() => {})
+      }
+    }
+    return esito
   })
+}
+
+let ultimoPrompt = ''
+function taglia(s: string, n: number): string {
+  const t = String(s ?? '').replace(/\s+\n/g, '\n').trim()
+  return t.length > n ? t.slice(0, n - 1) + '…' : t
 }

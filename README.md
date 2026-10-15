@@ -14,6 +14,10 @@ Rispondi `y` per aggiungere il marketplace, poi scegli l'ambito (utente, così v
 
 Dopo ogni strumento il mod chiede al server `amico` se Francesco ha detto qualcosa a voce nel frattempo (`lavora` con `interventi:`). Se sì, la frase arriva al modello come contesto del risultato, con l'indicazione di rispondere a voce solo a quello e poi continuare.
 
+## Memoria automatica
+
+A fine turno il mod salva domanda e risposta nel diario locale del computer (`lavora` con `ricorda:scambio|...`), così ogni conversazione resta cercabile con lo strumento `cerca`.
+
 ## Come funziona
 
 1. `turn.start`: "Leggo il tuo messaggio".

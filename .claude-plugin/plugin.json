@@ -1,7 +1,7 @@
 {
   "name": "omino-titoli",
-  "version": "0.2.0",
-  "description": "Manda all'omino sul desktop di Francesco il titolo di cosa sta facendo Claude e gli consegna le frasi che Francesco dice a voce mentre Claude lavora.",
+  "version": "0.3.0",
+  "description": "Omino sul desktop: titoli di cosa fa Claude, frasi dette a voce mentre lavora, e salvataggio automatico di ogni scambio nella memoria locale.",
   "author": {
     "name": "Francesco Parisi"
   }
