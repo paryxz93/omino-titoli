@@ -1,0 +1,5 @@
+{
+  "name": "omino-titoli",
+  "owner": { "name": "Francesco Parisi" },
+  "plugins": [{ "name": "omino-titoli", "source": "./" }]
+}

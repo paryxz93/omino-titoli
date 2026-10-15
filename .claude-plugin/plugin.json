@@ -1,0 +1,8 @@
+{
+  "name": "omino-titoli",
+  "version": "0.1.0",
+  "description": "Manda all'omino sul desktop di Francesco il titolo di cosa sta facendo Claude in chat (strumenti, ragionamento, fine turno), senza appesantire le risposte.",
+  "author": {
+    "name": "Francesco Parisi"
+  }
+}
