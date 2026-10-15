@@ -80,9 +80,12 @@ async function interventi($: any): Promise<string> {
   ultimoControllo = ora
   try {
     const r: any = await $.tool.call({ tool: AMICO, descrizione: 'interventi:' })
-    const testo = String(r?.text ?? r?.result ?? '').trim()
+    let testo = String(r?.text ?? r?.result ?? '').trim()
+    // il server risponde con un JSON {"result": "..."}: tiro fuori il testo
+    try { const j = JSON.parse(testo); if (j && typeof j.result === 'string') testo = j.result } catch {}
+    testo = testo.trim()
     if (!testo || testo === 'ok' || testo.startsWith('Errore') || testo.startsWith('Il motore')) return ''
-    return testo.replace(/\s+/g, ' ').slice(0, 400)
+    return testo.replace(/\s+/g, ' ').slice(0, 500)
   } catch {
     return ''
   }
